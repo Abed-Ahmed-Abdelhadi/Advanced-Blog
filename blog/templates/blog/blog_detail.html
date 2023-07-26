@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ blog_detail.POSTitle }}{% endblock %}
+{% block body %}
+<h1>{{ blog_detail.POSTitle }}</h1>
+<p class="date">
+Published {{ blog_detail.POSPublish }} by {{ blog_detail.POSAuthor }}
+</p>
+{{ blog_detail.POSBody|linebreaks }}
+{% endblock %}
