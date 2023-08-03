@@ -1,16 +1,27 @@
 {% extends "base.html" %}
+{% load blog_tags %}
 {% block title %}My Blog{% endblock %}
 {% block body %}
-<h1>My Blog</h1>
-{% for post in blog_list %}
-<h2>
-<a href="{% url 'blog:blog_detail' post.POSSlug %}">
-{{ post.POSTitle }}
-</a>
-</h2>
-<p class="date">
-Published {{ post.POSPublish }} by {{ post.POSAuthor }}
-</p>
-{{ post.POSBody|truncatewords:30|linebreaks }}
-{% endfor %}
+    <h1>My Blog</h1>
+    {% if tag %}
+    <h2>Posts tagged with "{{ tag.name }}"</h2>
+    {% endif %}
+    {% for post in blog_list %}
+        <h2>
+            <a href="{{ post.get_absolute_url }}">{{ post.POSTitle }}</a>
+        </h2>
+        <p class="tags">
+            Tags:
+            {% for tag in post.tags.all %}
+            <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+            {{ tag.name }}
+            </a>
+            {% if not forloop.last %}, {% endif %}
+            {% endfor %}</p>
+        <p class="date">
+            Published {{ post.POSPublish }} by {{ post.POSAuthor }}
+        </p>
+        {{ post.POSBody|markdown|truncatewords_html:30 }}
+    {% endfor %}
+    {% include "blog/pagination.html" with page=blog_list %}
 {% endblock %}
